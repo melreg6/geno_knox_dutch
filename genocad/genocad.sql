@@ -243,7 +243,7 @@ CREATE TABLE `designs` (
   `description` text,
   `design_json` text,
   `user_id` int(10) unsigned DEFAULT NULL,
-  `last_modification` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `last_modification` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `terminals_json` text,
   `library_id` int(10) unsigned NOT NULL,
   `is_public` tinyint(4) NOT NULL DEFAULT '0',
@@ -783,7 +783,7 @@ CREATE TABLE `parts` (
   `user_id` int(10) unsigned NOT NULL DEFAULT '0',
   `description_text` text,
   `last_modified` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `date_created` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `part_id` (`part_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=21365 DEFAULT CHARSET=latin1;
