@@ -1,24 +1,49 @@
-from genocad_grammar_extractor import GrammarRule, PartCategory
+"""
+goldbar_translator.py
+Translates extracted GenoCAD parts into Goldbar expressions for Knox.
+"""
+
+ROLE_MAP = {
+    "PRO": "promoter",
+    "RBS": "ribosomeBindingSite",
+    "CDS": "cds",
+    "TER": "terminator",
+}
+
+ORDER = ["PRO", "RBS", "CDS", "TER"]
 
 
-class GoldbarTranslator:
+def translate_all(parts: dict, cassettes: int = 1) -> tuple[str, dict]:
+    """
+    Convert extracted parts into a Goldbar expression and category map for Knox.
 
-    def translate(self, rule: GrammarRule) -> str:
-        tokens = [self._encode_category(cat) for cat in rule.sequence]
-        return " . ".join(tokens)
+    Args:
+        parts:      output of GenoCADGrammarExtractor.extract_parts_by_category()
+                    i.e. { "PRO": [{"id": "a069g", ...}, ...], "RBS": [...], ... }
+        cassettes:  1 for a single transcription unit, >1 for one-or-more.
 
-    def _encode_category(self, cat: PartCategory) -> str:
-        token = cat.name
-        if cat.repeatable:
-            token = f"{token}+"
-        if cat.optional:
-            token = f"[{token}]"
-        return token
+    Returns:
+        (goldbar_string, categories_dict) where
+            goldbar_string is a Knox-compatible expression, e.g.
+                "PRO . RBS . CDS . TER"
+            categories_dict maps each token to its role and part IDs, e.g.
+                { "PRO": { "promoter": ["a069g", "a069h"] }, ... }
+    """
+    active = [r for r in ORDER if r in parts and len(parts[r]) > 0]
+    if not active:
+        return None, None
 
-    def translate_all(self, rules: list[GrammarRule]) -> dict[str, str]:
-        return {rule.name: self.translate(rule) for rule in rules}
+    tokens = []
+    categories = {}
 
+    for role in active:
+        knox_role = ROLE_MAP.get(role, "cds")
+        categories[role] = {
+            knox_role: [p["id"] for p in parts[role]]
+        }
+        tokens.append(role)
 
-# ── Example output ─────────────────────────────────────────────
-# standard_construct   → "promoter . rbs . cds+ . terminator"
-# insulated_construct  → "[insulator] . promoter . rbs . cds+ . terminator . [insulator]"
+    expr = " . ".join(tokens)
+    goldbar = f"one-or-more({expr})" if cassettes > 1 else expr
+
+    return goldbar, categories
