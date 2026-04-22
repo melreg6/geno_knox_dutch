@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ table_name }}</title>
+</head>
+<body>
+<h1>Table: {{ table_name }}</h1>
+<table border="1">
+    <tr>
+        {% for col in columns %}
+        <th>{{ col }}</th>
+        {% endfor %}
+    </tr>
+    {% for row in rows %}
+    <tr>
+        {% for col in columns %}
+        <td>{{ row[col] }}</td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</table>
+<a href="{{ url_for('index') }}">Back to all tables</a>
+</body>
+</html>

@@ -6,13 +6,16 @@ import urllib.parse
 import urllib.request
 import webbrowser
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from pathlib import Path
 
 # ── config ────────────────────────────────────────────────────────────────────
 
 KNOX_URL = "http://localhost:8080"
-PORT     = 5050
-DB_PATH  = os.path.join(os.path.dirname(__file__), "..", "geno_knox_dutch", "genocad.db") # Change this to the directory where the genocad database is
+PORT     = 6000
+BASE_DIR = Path(__file__).resolve().parent.parent
+DB_PATH = BASE_DIR / "genocad" / "genocad.db"
 
+conn = sqlite3.connect(str(DB_PATH))
 SKIP_LETTERS = {"S", "[", "]", "(", ")", "{", "}", "CAS", "TP"}
 
 # ── load parts from genocad.db ────────────────────────────────────────────────

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>GenoCAD - Knox Design Explorer</title>
+<favicon href="{{ url_for('static', filename='favicon.ico') }}">
+
+<link rel="stylesheet" href="../static/app.css">
+
+</head>
+<body>
+
+<header>
+  <h1>GenoCAD → Knox Design Explorer</h1>
+  <p>Select parts and constraints to generate valid genetic designs.</p>
+</header>
+
+<main>
+  <div class="col" id="part-panel"><h2>Parts</h2></div>
+
+  <div class="col">
+    <h2>Options</h2>
+
+    <span class="lbl">Cassettes</span>
+    <div class="cass-row">
+      <button class="cass on" data-val="1">1</button>
+      <button class="cass" data-val="2">2+</button>
+    </div>
+
+    <label class="lbl">Max Designs</label>
+    <input type="number" id="ndesigns" value="100">
+
+    <label class="lbl">Space ID</label>
+    <input type="text" id="spaceid" value="ui_design">
+
+    <label class="lbl">Group ID</label>
+    <input type="text" id="groupid" value="ui_group">
+
+    <hr>
+
+    <pre class="goldbar" id="goldbar">—</pre>
+    <button id="btn" disabled>Generate</button>
+    <p id="status"></p>
+  </div>
+
+  <div class="col">
+    <p>Total designs: <span id="count">0</span></p>
+    <h2>Results</h2>
+    <div id="results"></div>
+
+  </div>
+</main>
+
+<script>
+  const PARTS = JSON.parse('{{ parts | tojson | safe }}');
+</script>
+
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+
+</body>
+</html>
