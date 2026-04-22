@@ -1,5 +1,7 @@
 # knox_proxy.py
+
 import urllib.request
+import urllib.error
 from config import KNOX_URL
 
 def proxy_request(method, path, body=None, headers=None):
@@ -12,5 +14,13 @@ def proxy_request(method, path, body=None, headers=None):
         method=method
     )
 
-    with urllib.request.urlopen(req) as resp:
-        return resp.read(), resp.status, dict(resp.headers)
+    try:
+        with urllib.request.urlopen(req) as resp:
+            return resp.read(), resp.status, dict(resp.headers)
+
+    except urllib.error.HTTPError as e:
+        error_body = e.read().decode()
+        print("Knox returned error:")
+        print(error_body)
+
+        return error_body, e.code, dict(e.headers)
