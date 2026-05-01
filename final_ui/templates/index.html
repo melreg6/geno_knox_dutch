@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>GenoCAD - Knox Design Explorer</title>
-<favicon href="{{ url_for('static', filename='favicon.ico') }}">
+<title>GenoKnoxDutch</title>
+<link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
 
 <link rel="stylesheet" href="../static/app.css">
 
@@ -11,13 +11,19 @@
 <body>
 
 <header>
-  <h1>GenoCAD → Knox Design Explorer</h1>
+  <h1>GenoKnoxDutch</h1>
   <p>Select parts and constraints to generate valid genetic designs.</p>
 </header>
 
 <main>
-  <div class="col" id="part-panel"><h2>Parts</h2></div>
-
+  <div class="col" id="part-panel">
+    <div id="part-nav"><h2>Parts</h2></div>
+    <div id="part-display"></div>
+  </div>
+<div class="col" id="selected-col">
+  <h2>Selected</h2>
+  <div id="selected-list"></div>
+</div>
   <div class="col">
     <h2>Options</h2>
 
@@ -36,9 +42,12 @@
     <label class="lbl">Group ID</label>
     <input type="text" id="groupid" value="ui_group">
 
-    <hr>
+ 
 
-    <pre class="goldbar" id="goldbar">—</pre>
+    <div class="goldbar-box">
+  <div class="goldbar-title">Goldbar Code</div>
+  <pre class="goldbar" id="goldbar">—</pre>
+</div>
     <button id="btn" disabled>Generate</button>
     <p id="status"></p>
   </div>
@@ -46,9 +55,14 @@
   <div class="col">
     <p>Total designs: <span id="count">0</span></p>
     <h2>Results</h2>
-    <div id="results"></div>
+<div class="results-wrapper">
+  <div id="results"></div>
 
+  <div class="export-row" id="export-btns" style="display:none">
+    <button class="btn-export" onclick="exportPartsCSV()">Export Parts CSV</button>
+    <button class="btn-export" onclick="exportDesignsCSV()">Export Designs CSV</button>
   </div>
+</div>
 </main>
 
 <script>
