@@ -97,12 +97,15 @@ python app.py
 
 ## 6. Running Tests
 
-From the **project root directory**, run:
+Navigate to the **test** directory, and run:
 
 ```bash
 pytest
 ```
-
+If it does not work, ensure you have pytest installed:
+```bash
+pip install pytest
+```
 ### Important Note:
 
 * `test_known_designs.py` requires the rebuilt database.
